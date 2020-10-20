@@ -65,3 +65,30 @@ rest %>%
   view()
 ```
 
+```{r}
+rest %>% 
+  mutate(dba = str_to_upper(dba)) %>% 
+  filter(str_detect(dba, "PIZZ")) %>% 
+  count(boro, grade) %>% 
+  pivot_wider(
+    names_from = grade, 
+    values_from = n
+  )
+```
+
+Make some plots??
+
+```{r}
+rest %>% 
+  mutate(dba = str_to_upper(dba)) %>% 
+  filter(str_detect(dba, "PIZZ")) %>% 
+  mutate(
+    boro = fct_infreq(boro), #this makes it reorder from high to low
+    boro = str_replace(boro, "Brooklyn", "Hipsterville")
+    #this did not work bc it changed the boro factor back to character. try recode
+    ) %>%
+  ggplot(aes(x = boro)) +
+  geom_bar() +
+  facet_wrap(.~grade)
+```
+

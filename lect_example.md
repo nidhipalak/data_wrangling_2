@@ -130,3 +130,41 @@ rest %>%
   #this gives EXACTLY what the string is so capital P-izza. We would find more in they were in all caps. 
   view()
 ```
+
+``` r
+rest %>% 
+  mutate(dba = str_to_upper(dba)) %>% 
+  filter(str_detect(dba, "PIZZ")) %>% 
+  count(boro, grade) %>% 
+  pivot_wider(
+    names_from = grade, 
+    values_from = n
+  )
+```
+
+    ## # A tibble: 5 x 4
+    ##   boro              A     B     C
+    ##   <chr>         <int> <int> <int>
+    ## 1 Bronx           164    47    10
+    ## 2 Brooklyn        333    57    18
+    ## 3 Manhattan       319    61    17
+    ## 4 Queens          294    34    16
+    ## 5 Staten Island   100    22     2
+
+Make some plots??
+
+``` r
+rest %>% 
+  mutate(dba = str_to_upper(dba)) %>% 
+  filter(str_detect(dba, "PIZZ")) %>% 
+  mutate(
+    boro = fct_infreq(boro), #this makes it reorder from high to low
+    boro = str_replace(boro, "Brooklyn", "Hipsterville")
+    #this did not work bc it changed the boro factor back to character. try recode
+    ) %>%
+  ggplot(aes(x = boro)) +
+  geom_bar() +
+  facet_wrap(.~grade)
+```
+
+<img src="lect_example_files/figure-gfm/unnamed-chunk-7-1.png" width="90%" />
