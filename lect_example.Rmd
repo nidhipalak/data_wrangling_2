@@ -4,6 +4,7 @@ author: "Nidhi Patel"
 date: "10/20/2020"
 output: github_document
 ---
+
 ```{r}
 library(tidyverse)
 
@@ -25,3 +26,42 @@ options(
 scale_color_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
+
+## restaurant insepctions
+
+```{r}
+api_url = "https://data.cityofnewyork.us/resource/43nn-pn8j.csv"
+
+rest = 
+  GET(api_url, query = list("$limit" = 50000)) %>% 
+  content("parsed")
+```
+
+```{r}
+rest %>% 
+  count(boro, grade) %>% 
+  pivot_wider(
+    names_from = grade, 
+    values_from = n
+  )
+```
+
+Go through data dictionary to get a clearer sense of what N, P 
+(pending), Z are. 
+
+```{r}
+#this changes the entire dataset
+rest = rest %>% 
+  filter(grade %in% c("A", "B", "C"), boro != "0")
+```
+
+How many pizza places are there?
+
+```{r}
+rest %>% 
+  mutate(dba = str_to_upper(dba)) %>% 
+  filter(str_detect(dba, "PIZZ")) %>% 
+  #this gives EXACTLY what the string is so capital P-izza. We would find more in they were in all caps. 
+  view()
+```
+
