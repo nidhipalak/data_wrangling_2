@@ -168,3 +168,15 @@ rest %>%
 ```
 
 <img src="lect_example_files/figure-gfm/unnamed-chunk-7-1.png" width="90%" />
+
+## Napoleon Dynamite
+
+``` r
+napdyn_url = "https://www.amazon.com/Napoleon-Dynamite-Jon-Heder/product-reviews/B000I9U972/ref=cm_cr_othr_d_show_all_btm?ie=UTF8&reviewerType=all_reviews"
+
+napoleon_html = read_html(napdyn_url)
+
+review_titles = napoleon_html %>% 
+  html_nodes(".a-text-bold span") %>% 
+  html_text()
+```
