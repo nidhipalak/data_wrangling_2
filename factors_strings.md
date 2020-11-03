@@ -234,3 +234,77 @@ data_marj %>%
 ```
 
 <img src="factors_strings_files/figure-gfm/unnamed-chunk-11-1.png" width="90%" />
+
+## Weather
+
+``` r
+weather_df = 
+  rnoaa::meteo_pull_monitors( 
+    c("USW00094728", "USC00519397", "USS0023B17S"), 
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2017-01-01",
+    date_max = "2017-12-31") %>%
+    mutate(
+    name = recode(
+      id, 
+      USW00094728 = "CentralPark_NY", 
+      USC00519397 = "Waikiki_HA",
+      USS0023B17S = "Waterhole_WA"),
+    tmin = tmin / 10,
+    tmax = tmax / 10,
+    month = lubridate::floor_date(date, unit = "month")) %>% 
+  select(name, id, everything())
+```
+
+    ## Registered S3 method overwritten by 'hoardr':
+    ##   method           from
+    ##   print.cache_info httr
+
+    ## using cached file: /Users/madhusudhanpatel/Library/Caches/R/noaa_ghcnd/USW00094728.dly
+
+    ## date created (size, mb): 2020-10-05 13:38:35 (7.522)
+
+    ## file min/max dates: 1869-01-01 / 2020-10-31
+
+    ## using cached file: /Users/madhusudhanpatel/Library/Caches/R/noaa_ghcnd/USC00519397.dly
+
+    ## date created (size, mb): 2020-10-05 13:38:42 (1.699)
+
+    ## file min/max dates: 1965-01-01 / 2020-03-31
+
+    ## using cached file: /Users/madhusudhanpatel/Library/Caches/R/noaa_ghcnd/USS0023B17S.dly
+
+    ## date created (size, mb): 2020-10-05 13:38:44 (0.88)
+
+    ## file min/max dates: 1999-09-01 / 2020-10-31
+
+``` r
+weather_df %>% 
+  mutate(name = fct_reorder(name, tmax)) %>% 
+  ggplot(aes(x = name, y = tmax)) + 
+  geom_violin()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_ydensity).
+
+<img src="factors_strings_files/figure-gfm/unnamed-chunk-13-1.png" width="90%" />
+
+### Linear model with tmax as outcome
+
+``` r
+weather_df %>% 
+  mutate(name = fct_reorder(name, tmax)) %>% 
+  lm(tmax ~ name, data = .)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = tmax ~ name, data = .)
+    ## 
+    ## Coefficients:
+    ##        (Intercept)  nameCentralPark_NY      nameWaikiki_HA  
+    ##              7.482               9.884              22.176
+
+``` r
+#waterhole is the reference. 
+```
