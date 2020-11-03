@@ -7,6 +7,8 @@ output: github_document
 
 ```{r setup}
 library(tidyverse)
+library(p8105.datasets)
+library(rvest)
 
 knitr::opts_chunk$set(
   fig.width = 6,
@@ -23,3 +25,45 @@ options(
 scale_color_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
+
+## Strings and regex
+```{r}
+string_vec = c("my", "name", "is", "nidhi")
+
+str_detect(string_vec, "nidh")
+str_replace(string_vec, "nidhi", "Nidhi")
+```
+
+```{r}
+string_vec = c(
+  "i think we all rule for participating",
+  "i think i have been caught",
+  "i think this will be quite fun",
+  "it will be fun, i think"
+)
+str_detect(string_vec, "^i think") #the "^" means it's looking at the first part of the string
+str_detect(string_vec, "i think$") #"$" after means look for it at the end
+```
+
+```{r}
+string_vec = c(
+  "Y'all remember Pres. HW Bush?",
+  "I saw a green bush",
+  "BBQ and Bushwalking at Molonglo Gorge",
+  "BUSH -- LIVE IN CONCERT"
+)
+
+str_detect(string_vec, "[Bb]ush") #in brackets to say it can either by capital or lower case b.
+```
+
+```{r}
+string_vec = c(
+  "7th inning stretch",
+  "1st half soon to begin, Texas won the toss.",
+  "she is 5 feet 4 inches tall",
+  "3AM = can't sleep :("
+)
+
+str_detect(string_vec, "[0-9][a-zA-Z]")
+```
+
